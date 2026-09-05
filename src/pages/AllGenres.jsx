@@ -7,13 +7,13 @@ import {
   useGetAdultMoviesQuery,
 } from "../redux/FetchMovie";
 import { Link } from "react-router-dom";
-function AllGenres() {
+import Skeleton from "react-loading-skeleton";
 
-  const [activeTab, setActiveTab] = useState("genre"); 
+function AllGenres() {
+  const [activeTab, setActiveTab] = useState("genre");
   const [selectedGenre, setSelectedGenre] = useState("28");
   const [selectedCountry, setSelectedCountry] = useState("US");
   const [page, setPage] = useState(1);
-
 
   const [now] = useState(() => Date.now());
   const genres = [
@@ -59,16 +59,17 @@ function AllGenres() {
     { page },
     { skip: activeTab !== "adult" }
   );
+
   const activeResult =
     activeTab === "genre" ? genreResult :
     activeTab === "country" ? countryResult :
     adultResult;
-     const { data, isLoading, isError } = activeResult;
+
+  const { data, isLoading, isError } = activeResult;
   const movies = data?.results || [];
   const totalPages = data?.total_pages || 1;
 
   useEffect(() => {
-   
     window.scrollTo(0, 0);
   }, [activeTab, selectedGenre, selectedCountry, page]);
 
@@ -85,9 +86,23 @@ function AllGenres() {
     if (page > 1) setPage(page - 1);
   }
 
+  if (isError)
+    return (
+      <div className="w-full h-screen bg-black flex flex-col items-center justify-center gap-10">
+        <p className="text-red-600 text-3xl">Something went wrong.</p>
+        <button className="bg-red-600 text-white text-lg px-6 py-3 rounded-md">
+          Go Back
+        </button>
+      </div>
+    );
+
   return (
     <div className="bg-black min-h-screen w-full absolute text-white">
-      <div className="liner w-full h-1 bg-red-600 my-20"></div>
+      <div
+        className={`liner w-full h-1 my-20 ${
+          isLoading ? "bg-orange-600 animate-ping" : "bg-red-600"
+        }`}
+      ></div>
 
       <div className="w-full flex flex-col items-center px-4">
         <h1
@@ -97,7 +112,6 @@ function AllGenres() {
           Explore
         </h1>
 
-    
         <div className="flex gap-4 mb-8">
           <button
             onClick={() => switchTab("genre")}
@@ -125,7 +139,6 @@ function AllGenres() {
           </button>
         </div>
 
-   
         {activeTab === "genre" && (
           <div className="flex flex-wrap gap-3 justify-center mb-10 max-w-4xl">
             {genres.map((g) => (
@@ -180,17 +193,20 @@ function AllGenres() {
         </h1>
       </div>
 
-
       <div className="w-full flex flex-wrap gap-4 px-4 justify-center items-center">
         {isLoading ? (
-          <div className="text-red-600">Loading...</div>
+          Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="w-60">
+              <Skeleton
+                height={320}
+                borderRadius={8}
+                baseColor="#1a1a1a"
+                highlightColor="#333"
+              />
+            </div>
+          ))
         ) : movies.length === 0 ? (
-          <p className="text-white text-center w-full text-"feat: add skeleton loading with react-loading-skeleton
-
-- Install and integrate react-loading-skeleton package
-- Fix skeleton/loading/empty state logic to render inside movie grid only
-- Fix upcomingResult skip condition to use debouncedSearch consistently
-- Show 8 skeleton cards while loading, empty message when no results"xl">
+          <p className="text-white text-center w-full text-xl py-20">
             No movies found. Try a different search or genre.
           </p>
         ) : (
@@ -256,8 +272,7 @@ function AllGenres() {
           <RiArrowRightLine />
         </button>
       </div>
-      </div>
-  
+    </div>
   );
 }
 
