@@ -1,26 +1,73 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import Bookedmarked from "../components/Bookedmarked";
 
 function SeriesDetails() {
   const { seriesId } = useParams();
   const [series, setSeries] = useState(null);
+  const [isError, setIsError] = useState(false);
   const apikey = import.meta.env.VITE_API_KEY;
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   async function fetchDetail() {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${apikey}&language=en-US&append_to_response=videos,credits,similar`
-    );
-    const data = await res.json();
-    setSeries(data);
+    try {
+      setIsError(false);
+      const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${apikey}&language=en-US&append_to_response=videos,credits,similar`
+      );
+      const data = await res.json();
+      setSeries(data);
+    } catch (err) {
+      setIsError(true);
+    }
   }
 
   useEffect(() => {
+    setSeries(null);
     fetchDetail();
     window.scrollTo(0, 0);
   }, [seriesId]);
 
-  if (!series) return <div className="h-screen w-full flex justify-center items-center"> <p className=" p-10 text-3xl text-red-600 font-bold">Loading...</p>;</div>
+  if (isError)
+    return (
+      <div className="w-full h-screen bg-black flex flex-col items-center justify-center gap-6 text-white">
+        <p className="text-red-600 text-3xl font-bold">Something went wrong.</p>
+        <Link to="/Series" className="bg-red-600 px-6 py-3 rounded-md font-bold">
+          Back to Series
+        </Link>
+      </div>
+    );
+
+  if (!series) {
+    return (
+      <div className="w-full min-h-screen bg-black text-white">
+        {/* Skeleton hero */}
+        <div className="relative w-full h-[80vh]">
+          <Skeleton height="100%" width="100%" baseColor="#1a1a1a" highlightColor="#333" />
+          <div className="absolute bottom-10 left-20 max-w-2xl w-full">
+            <Skeleton height={50} width="70%" baseColor="#1a1a1a" highlightColor="#333" />
+            <Skeleton height={16} width="90%" baseColor="#1a1a1a" highlightColor="#333" style={{ marginTop: 16 }} />
+            <Skeleton height={16} width="80%" baseColor="#1a1a1a" highlightColor="#333" style={{ marginTop: 8 }} />
+            <Skeleton height={40} width={150} borderRadius={8} baseColor="#1a1a1a" highlightColor="#333" style={{ marginTop: 16 }} />
+          </div>
+        </div>
+
+        {/* Skeleton cast row */}
+        <div className="p-10">
+          <Skeleton height={28} width={120} baseColor="#1a1a1a" highlightColor="#333" />
+          <div className="flex gap-4 mt-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="w-32 shrink-0">
+                <Skeleton height={160} borderRadius={8} baseColor="#1a1a1a" highlightColor="#333" />
+                <Skeleton height={14} width="80%" baseColor="#1a1a1a" highlightColor="#333" style={{ marginTop: 8 }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const trailer = series.videos?.results?.find(
     (v) => v.type === "Trailer" && v.site === "YouTube"
@@ -39,19 +86,21 @@ function SeriesDetails() {
 
         <div className="absolute bottom-10 left-20 max-w-2xl">
           <h1 className="text-6xl font-bold mb-4">{series.name}</h1>
-       <div className="max-w-2xl mb-8">
-          <p className={showFullDescription ? "" : "line-clamp-3"}>
-            {series.overview}
-          </p>
-          {series.overview?.length > 200 && (
-            <button
-              onClick={() => setShowFullDescription(!showFullDescription)}
-              className="text-red-500 font-semibold text-sm mt-2"
-            >
-              {showFullDescription ? "View Less" : "View More"}
-            </button>
-          )}
-        </div>
+
+          <div className="max-w-2xl mb-8">
+            <p className={showFullDescription ? "" : "line-clamp-3"}>
+              {series.overview}
+            </p>
+            {series.overview?.length > 200 && (
+              <button
+                onClick={() => setShowFullDescription(!showFullDescription)}
+                className="text-red-500 font-semibold text-sm mt-2"
+              >
+                {showFullDescription ? "View Less" : "View More"}
+              </button>
+            )}
+          </div>
+
           <div className="flex gap-4 items-center mb-4 text-sm text-gray-400">
             <span>{series.first_air_date}</span>
             <span>•</span>
@@ -79,7 +128,7 @@ function SeriesDetails() {
                 Watch Trailer
               </a>
             )}
-
+            <Bookedmarked items={series} size={35} />
           </div>
         </div>
       </div>

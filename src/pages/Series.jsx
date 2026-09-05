@@ -6,48 +6,51 @@ import {
   useSearchSeriesQuery,
   useGetSeriesByGenreQuery,
 } from "../redux/FetchMovie";
-
 import { Link } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
 
 function Series() {
-   const [now] = useState(() => Date.now());
+  const [now] = useState(() => Date.now());
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
   const [page, setPage] = useState(1);
 
- const popularResult = useGetPopularSeriesQuery(
+  const popularResult = useGetPopularSeriesQuery(
     { page },
-    { skip: searchQuery !== "" || selectedGenre !== "" }
+    { skip: debouncedSearch !== "" || selectedGenre !== "" }
   );
 
   const searchResult = useSearchSeriesQuery(
     { query: debouncedSearch, page },
     { skip: debouncedSearch === "" }
   );
+
   const genreResult = useGetSeriesByGenreQuery(
     { genreId: selectedGenre, page },
     { skip: selectedGenre === "" }
   );
-    const activeResult = debouncedSearch
+
+  const activeResult = debouncedSearch
     ? searchResult
     : selectedGenre
     ? genreResult
     : popularResult;
 
-      const { data, isLoading, isError } = activeResult;
+  const { data, isLoading, isError } = activeResult;
   const series = data?.results || [];
   const totalPages = data?.total_pages || 1;
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
- const timer =  setTimeout(()=> {
-setDebouncedSearch(searchQuery)
-    },500) 
-    return () => {
-      clearTimeout(timer)
-    }
- 
-  }, [page, searchQuery, selectedGenre]);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page, debouncedSearch, selectedGenre]);
 
   function nextPage() {
     if (page < totalPages) {
@@ -73,9 +76,23 @@ setDebouncedSearch(searchQuery)
     setPage(1);
   }
 
+  if (isError)
+    return (
+      <div className="w-full h-screen bg-black flex flex-col items-center justify-center gap-10 text-white">
+        <p className="text-red-600 text-3xl">Something went wrong.</p>
+        <button className="bg-red-600 text-white text-lg px-6 py-3 rounded-md">
+          Go Back
+        </button>
+      </div>
+    );
+
   return (
     <div className="bg-black min-h-screen w-full absolute text-white">
-      <div className="liner w-full h-1 bg-red-600 mt-20"></div>
+      <div
+        className={`liner w-full h-1 mt-20 ${
+          isLoading ? "bg-orange-600 animate-ping" : "bg-red-600"
+        }`}
+      ></div>
 
       <div className="flex gap-20 flex-col h-150 w-full relative">
         <div className="w-full mt-20 flex justify-center items-center px-4 flex-col">
@@ -146,58 +163,65 @@ setDebouncedSearch(searchQuery)
 
       <div className="w-full flex flex-wrap gap-4 px-4 justify-center items-center">
         {isLoading ? (
-           <div className="liner w-full h-1 bg-red-600 mt-20"></div>
-
+          Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="w-60">
+              <Skeleton
+                height={320}
+                borderRadius={8}
+                baseColor="#1a1a1a"
+                highlightColor="#333"
+              />
+            </div>
+          ))
         ) : series.length === 0 ? (
- <p className="text-white text-center w-full text-xl">
-    No series found. Try a different search or genre.
-  </p>
-           ) : (
-         series.map((serie) => (
-          <div className="group w-60 h-80 rounded-md relative" key={serie.id}>
-            <img
-              className="h-full w-full absolute object-cover"
-              src={
-                serie.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${serie.poster_path}`
-                  : "/fallback.jpg"
-              }
-              alt={serie.name}
-            />
-            <div className="absolute w-full h-full inset-0 bg-gradient-to-b from-black via-black/30 to-transparent"></div>
-    <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center items-center z-10 pointer-events-none group-hover:pointer-events-auto">
-      <Link
-        to={`/series/${serie.id}`}
-        className="border flex py-3 px-4 gap-3 rounded-md bg-white/20 cursor-pointer font-bold hover:bg-white hover:text-black transition"
-      >
-        View Description
-      </Link>
-    </div>
-     <div className="z-10 relative ">
-      <Bookedmarked items={serie} />
-    
-      {now < new Date(serie.release_date).getTime() ? (
-        <h1 className="absolute  left-0 font-bold">
-          Coming Soon : {serie.release_date}
-        </h1>
-      ) : (
-        <h1 className="absolute bottom-0 left-0 font-bold">Released</h1>
-      )}
-    </div>
-            <h1 className="absolute backdrop-blur-[2px] text-bold bottom-0">
-              {serie.name}
-            </h1>
-    
-            <div className="">
+          <p className="text-white text-center w-full text-xl py-20">
+            No series found. Try a different search or genre.
+          </p>
+        ) : (
+          series.map((serie) => (
+            <div className="group w-60 h-80 rounded-md relative" key={serie.id}>
+              <Link to={`/series/${serie.id}`} className="absolute inset-0 z-0">
+                <img
+                  className="h-full w-full absolute object-cover"
+                  src={
+                    serie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500${serie.poster_path}`
+                      : "/fallback.jpg"
+                  }
+                  alt={serie.name}
+                />
+                <div className="absolute w-full h-full inset-0 bg-gradient-to-b from-black via-black/30 to-transparent"></div>
+                <h1 className="absolute backdrop-blur-[2px] text-bold bottom-0">
+                  {serie.name}
+                </h1>
+              </Link>
+
+              <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center items-center z-10 pointer-events-none group-hover:pointer-events-auto">
+                <Link
+                  to={`/series/${serie.id}`}
+                  className="border flex py-3 px-4 gap-3 rounded-md bg-white/20 cursor-pointer font-bold hover:bg-white hover:text-black transition"
+                >
+                  View Description
+                </Link>
+              </div>
+
+              <div className="z-10 relative">
+                <Bookedmarked items={serie} />
+                {now < new Date(serie.first_air_date).getTime() ? (
+                  <h1 className="absolute left-0 font-bold">
+                    Coming Soon : {serie.first_air_date}
+                  </h1>
+                ) : (
+                  <h1 className="absolute bottom-0 left-0 font-bold">Released</h1>
+                )}
+              </div>
+
               <h1 className="absolute bottom-0 right-0 font-bold">
                 {serie.original_language}
               </h1>
-     
             </div>
-          </div>
-        ))
-        ) }
-     
+          ))
+        )}
       </div>
 
       <div className="w-full p-6 flex gap-10 justify-center items-center bg-black font-bold">
