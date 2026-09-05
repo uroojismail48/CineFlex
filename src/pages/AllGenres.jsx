@@ -185,7 +185,12 @@ function AllGenres() {
         {isLoading ? (
           <div className="text-red-600">Loading...</div>
         ) : movies.length === 0 ? (
-          <p className="text-white text-center w-full text-xl">
+          <p className="text-white text-center w-full text-"feat: add skeleton loading with react-loading-skeleton
+
+- Install and integrate react-loading-skeleton package
+- Fix skeleton/loading/empty state logic to render inside movie grid only
+- Fix upcomingResult skip condition to use debouncedSearch consistently
+- Show 8 skeleton cards while loading, empty message when no results"xl">
             No movies found. Try a different search or genre.
           </p>
         ) : (

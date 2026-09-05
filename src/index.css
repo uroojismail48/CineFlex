@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import 'react-loading-skeleton/dist/skeleton.css';
 /* index.css ya global css mein */
 html, body {
   background-color: black;
