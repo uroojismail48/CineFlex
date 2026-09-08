@@ -9,7 +9,7 @@ import SeriesDetails from "../pages/SeriesDetails";
 import WishList from "../pages/WishList";
 import DetailedPage from "../pages/Detailedpage";
 import NotFound from "../pages/404Page";
-
+import GenreDetail from "../pages/GenreDetail";
 function Data() {
   const [movies, setMovies] = useState([]);
   const apikey = import.meta.env.VITE_API_KEY;
@@ -42,6 +42,7 @@ function Data() {
       <Route path="/movie/:movieId" element={<DetailedPage/>}/>
 <Route path="/series/:seriesId" element={<SeriesDetails />} />
 <Route  path="*" element={<NotFound />} />
+<Route path="/genre/:genreName" element={<GenreDetail />} />
 </Routes>
 
     </div>
