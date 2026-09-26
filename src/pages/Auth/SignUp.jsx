@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { Link } from "react-router-dom"
 import z from "zod"
 
 function SignUp() {
@@ -85,6 +86,8 @@ alert("WelCome")
           >
             Submit
           </button>
+       <Link to="/login">   <p>Already Logged in?</p>
+       </Link>
         </form>
       </div>
     </div>
