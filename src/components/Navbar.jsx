@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RiBookmarkFill} from  "@remixicon/react";
+import { RiBookmarkFill, RiUserFill} from  "@remixicon/react";
 import { Link } from "react-router-dom";
 
 
@@ -40,7 +40,7 @@ text-white
          
           <span>|</span>
             <Link to="/Wishlists"><RiBookmarkFill  /></Link>
-
+          <Link to="/Signup">    <RiUserFill color="white"  /></Link>
         </div>
       </div>
 
