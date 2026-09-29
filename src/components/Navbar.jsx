@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RiBookmarkFill, RiUserFill} from  "@remixicon/react";
 import { Link } from "react-router-dom";
+import { SignedOut, UserButton } from "@clerk/clerk-react";
 
 
 
@@ -40,7 +41,16 @@ text-white
          
           <span>|</span>
             <Link to="/Wishlists"><RiBookmarkFill  /></Link>
-          <Link to="/Signup">    <RiUserFill color="white"  /></Link>
+
+   
+              <SignedOut>
+              <Link to="/Signup">    <RiUserFill color="white"  /></Link>
+            </SignedOut>
+            
+              <UserButton/>
+    
+        
+   
         </div>
       </div>
 
