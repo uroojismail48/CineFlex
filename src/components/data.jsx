@@ -39,17 +39,17 @@ function Data() {
       <Routes>
         <Route path="/" element={<Main movies={movies} />} />
         <Route path="/NewMovies" element={<NewMovies />} />
-        <Route path="/Genre" element={<AllGenres />} />
-
-        <Route path="/Series" element={<Series />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/Wishlists" element={<WishList />} />
+          <Route path="/movie/:movieId" element={<DetailedPage />} />
+          <Route path="/series/:seriesId" element={<SeriesDetails />} />
+
+          <Route path="/Series" element={<Series />} />
+          <Route path="/Genre" element={<AllGenres />} />
+          <Route path="/genre/:genreName" element={<GenreDetail />} />
         </Route>
-        <Route path="/movie/:movieId" element={<DetailedPage />} />
-        <Route path="/series/:seriesId" element={<SeriesDetails />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/genre/:genreName" element={<GenreDetail />} />
 
         <Route
           path="/Signup/*"
