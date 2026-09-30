@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import Main from "./Main";
 import Navbar from "./Navbar";
-import NewMovies from "../pages/NewMovies";
-import AllGenres from "../pages/AllGenres";
+const NewMovies = lazy(() => import("../pages/NewMovies"));
+const AllGenres = lazy(() => import("../pages/AllGenres"));
 import { Route, Routes } from "react-router-dom";
-import Series from "../pages/Series";
-import SeriesDetails from "../pages/SeriesDetails";
-import WishList from "../pages/WishList";
-import DetailedPage from "../pages/Detailedpage";
-import NotFound from "../pages/404Page";
-import GenreDetail from "../pages/GenreDetail";
-import Signup from "../pages/Auth/SignUp";
+const Series = lazy(() => import("../pages/Series"));
+const SeriesDetails = lazy(() => import("../pages/SeriesDetails"));
+const WishList = lazy(() => import("../pages/WishList"));
+const DetailedPage = lazy(() => import("../pages/Detailedpage"));
+const NotFound = lazy(() => import("../pages/404Page"));
+const GenreDetail = lazy(() => import("../pages/GenreDetail"));
 
+const Signup = lazy(() => import("../pages/Auth/SignUp"));
+const Login = lazy(() => import("../pages/Auth/Login"));
 import ProtectedRoutes from "../JS/ProtectedRoutes";
-import Login from "../pages/Auth/Login";
+
 function Data() {
+
   const [movies, setMovies] = useState([]);
   const apikey = import.meta.env.VITE_API_KEY;
 
@@ -36,7 +38,11 @@ function Data() {
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar className="" />
       </div>
+              <Suspense fallback={<p> loading...</p>}>
+     
+       
       <Routes>
+
         <Route path="/" element={<Main movies={movies} />} />
         <Route path="/NewMovies" element={<NewMovies />} />
         <Route path="*" element={<NotFound />} />
@@ -60,6 +66,7 @@ function Data() {
           element={<Login routing="path" path="/Signin" />}
         />
       </Routes>
+       </Suspense>
     </div>
   );
 }

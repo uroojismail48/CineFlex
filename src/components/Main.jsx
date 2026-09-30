@@ -37,7 +37,7 @@ function Main({movies}) {
   />
   <div className="absolute w-full h-full inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10">
   <div className="pl-20 w-160 gap-8  h-full flex justify-center items-start flex-col ">
-       <h1 className='text-7xl font-bold '>{movie.title}</h1>
+       <h1 className='text-6xl font-bold '>{movie.title}</h1>
           <div className="flex justify-start  gap-5 "><h5>Available in : <b>{movie.original_language}</b></h5>
            <p>Polularity: <b>
              {

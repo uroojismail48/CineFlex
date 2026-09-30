@@ -1,15 +1,14 @@
 @import "tailwindcss";
 @import 'react-loading-skeleton/dist/skeleton.css';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-/* index.css ya global css mein */
+
 html, body {
   background-color: black;
   overflow-x : hidden;
-  font-family: 'Poppins', sans-serif;
+ 
+  scrollbar-width: none;
+  
 }
-.circlemax{
-   
-}
+
 .one{
  border-top-right-radius: 50px;
     filter: blur(10px);

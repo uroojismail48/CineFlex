@@ -35,7 +35,7 @@ function Vd() {
  <div className="two  bg-red-600  absolute right-0"></div>
 <div className="three    bg-red-600 absolute"></div>
 </div>
-<div className="v h-full z-[999] relative  w-full px-40">
+<div className="v h-full z-[999] relative  w-full px-4 md:px-10  lg:px-20">
     <h1 className='text-7xl py-20 font-bold flex w-full border justify-center
      items-center text-center text-transparent'
        style={{ WebkitTextStroke: '1px white' }}
