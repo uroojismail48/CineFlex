@@ -7,11 +7,13 @@ import { ClerkProvider } from "@clerk/react";
 import { ui } from "@clerk/ui";
 import { Provider } from "react-redux";
 const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const proxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+
 createRoot(document.getElementById("root")).render(
-<ClerkProvider publishableKey={clerkKey} ui={ui} afterSignOutUrl="/">
+<ClerkProvider publishableKey={clerkKey} proxyUrl={proxyUrl} ui={ui} afterSignOutUrl="/">
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <App /> 
       </BrowserRouter>
     </Provider>
   </ClerkProvider>,
