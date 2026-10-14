@@ -16,7 +16,6 @@ const Login = lazy(() => import("../pages/Auth/Login"));
 import ProtectedRoutes from "../JS/ProtectedRoutes";
 
 function Data() {
-
   const [movies, setMovies] = useState([]);
   const apikey = import.meta.env.VITE_API_KEY;
 
@@ -38,16 +37,13 @@ function Data() {
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar className="" />
       </div>
-              <Suspense fallback={<p> loading...</p>}>
-     
-       
-      <Routes>
+      <Suspense fallback={<p> loading...</p>}>
+        <Routes>
+          <Route path="/" element={<Main movies={movies} />} />
+          <Route path="/NewMovies" element={<NewMovies />} />
+          <Route path="*" element={<NotFound />} />
 
-        <Route path="/" element={<Main movies={movies} />} />
-        <Route path="/NewMovies" element={<NewMovies />} />
-        <Route path="*" element={<NotFound />} />
-
-        <Route element={<ProtectedRoutes />}>
+          <Route element={<ProtectedRoutes />}> </Route>
           <Route path="/Wishlists" element={<WishList />} />
           <Route path="/movie/:movieId" element={<DetailedPage />} />
           <Route path="/series/:seriesId" element={<SeriesDetails />} />
@@ -55,18 +51,17 @@ function Data() {
           <Route path="/Series" element={<Series />} />
           <Route path="/Genre" element={<AllGenres />} />
           <Route path="/genre/:genreName" element={<GenreDetail />} />
-        </Route>
 
-        <Route
-          path="/Signup/*"
-          element={<Signup routing="path" path="/Signup" />}
-        />
-        <Route
-          path="/Signin/*"
-          element={<Login routing="path" path="/Signin" />}
-        />
-      </Routes>
-       </Suspense>
+          <Route
+            path="/Signup/*"
+            element={<Signup routing="path" path="/Signup" />}
+          />
+          <Route
+            path="/Signin/*"
+            element={<Login routing="path" path="/Signin" />}
+          />
+        </Routes>
+      </Suspense>
     </div>
   );
 }
