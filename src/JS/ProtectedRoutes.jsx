@@ -1,16 +1,16 @@
-import { useAuth } from "@clerk/clerk-react"
-import { Navigate, Outlet } from "react-router-dom"
+import { useAuth } from "@clerk/react";
+import { Navigate, Outlet } from "react-router-dom";
 
 function ProtectedRoutes() {
-const { isSignedIn} =  useAuth()
-  if(!isSignedIn){
-    return <Navigate to="/Signin" replace />
+  const { isSignedIn } = useAuth();
+  if (!isSignedIn) {
+    return <Navigate to="/Signin" replace />;
   }
   return (
     <div>
-   <Outlet/>     
+      <Outlet />
     </div>
-  )
-  }
+  );
+}
 
-export default ProtectedRoutes
+export default ProtectedRoutes;

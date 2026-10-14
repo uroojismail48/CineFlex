@@ -1,11 +1,11 @@
-import { SignIn } from "@clerk/clerk-react"
+import { SignIn } from "@clerk/react";
 
 function Login() {
   return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-<SignIn/>
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      <SignIn />
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;
