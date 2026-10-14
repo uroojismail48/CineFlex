@@ -2,7 +2,6 @@ import { useState } from "react";
 import { RiBookmarkFill, RiUserFill } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { Show, UserButton } from "@clerk/react";
-
 function Navbar({ className = "" }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
