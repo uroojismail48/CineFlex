@@ -43,9 +43,9 @@ function Data() {
           <Route path="/NewMovies" element={<NewMovies />} />
           <Route path="*" element={<NotFound />} />
 
-          <Route element={<ProtectedRoutes />}>
+          <Route element={<ProtectedRoutes />}>  </Route>
             <Route path="/Wishlists" element={<WishList />} />
-          </Route>
+
 
           <Route path="/movie/:movieId" element={<DetailedPage />} />
           <Route path="/series/:seriesId" element={<SeriesDetails />} />
